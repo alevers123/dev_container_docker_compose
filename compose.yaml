@@ -1,0 +1,39 @@
+version: '3'
+services:
+  docker_dev_container:
+    #hostname: DEV_CONT
+    container_name: ${cont_name:-dev_cont}
+    privileged: true
+    build:
+      context: .
+      dockerfile: dev_container.dockerfile
+      args:
+        uid: $uid
+        gid: $gid
+        uname: $uname
+        docker_guid: 989
+        progress: plain
+    image: $image_name
+    network_mode: host
+    volumes:
+      - /mnt/c/windows:/opt/windows
+      - $HOME/Project:$HOME/Project
+      - /run/WSL:/run/WSL
+      - /mnt/c/win32yank:/opt/win_executables
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/bin/docker:/usr/bin/docker
+      - /init:/init
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /mnt/wslg:/mnt/wslg
+      - /run/user/$uid:/run/user/$uid
+    environment:
+      - WSL_INTEROP=$WSL_INTEROP
+      - DISPLAY=$DISPLAY
+      - WAYLAND_DISPLAY=$WAYLAND_DISPLAY
+      - XDG_RUNTIME_DIR=$XDG_RUNTIME_DIR
+      - PULSE_SERVER=$PULSE_SERVER
+    tty: true
+    stdin_open: true
+#networks:
+#  dev_container_netw:
+#    driver: bridge
